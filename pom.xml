@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <groupId>com.sf.linker</groupId>
+    <artifactId>go-test</artifactId>
+    <version>1.0.0</version>
+    <!-- <packaging>mvn-golang</packaging> -->
+    <name>go-test</name>
+    <description>go-test module for fusionwork</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mvn.golang.go.version>1.12.4</mvn.golang.go.version>
+        <mvn.golang.wrapper.version>2.3.3</mvn.golang.wrapper.version>
+        <mvn.golang.disable.ssl.check>true</mvn.golang.disable.ssl.check>
+        <target.name>gomongo</target.name>
+        <final.extension></final.extension>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>when-windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <final.extension>.exe</final.extension>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <sourceDirectory>${basedir}${file.separator}</sourceDirectory>
+        <directory>${basedir}${file.separator}bin</directory>
+        <plugins>
+
+            <plugin>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <executions>
+                    <execution>
+                        <id>Renaming build artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>bash</executable>
+                            <commandlineArgs>${basedir}${file.separator}buildgo.sh</commandlineArgs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-assembly-uat</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly/uat/assembly.xml</descriptor>
+                            </descriptors>
+                            <finalName>bin</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
